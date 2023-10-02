@@ -25,4 +25,10 @@ public class BookServices {
     public void addBook(Book book){
         bookList.add(book);
     }
+    public Book deleteBook(int bookId){
+        Book book = new Book();
+        book =bookList.stream().filter(e->e.getId()==bookId).findFirst().get();
+        bookList.remove(book);
+        return book;
+    }
 }
