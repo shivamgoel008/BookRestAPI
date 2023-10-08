@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class BookController {
@@ -22,7 +23,7 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable("id") int id) {
+    public Book getBookById(@PathVariable("id") UUID id) {
         return this.bookServices.getBookById(id);
     }
 
@@ -32,12 +33,12 @@ public class BookController {
     }
 
     @DeleteMapping("/deletebook/{id}")
-    public Book deleteBookById(@PathVariable("id") int id) {
-        return this.bookServices.deleteBook(id);
+    public void deleteBookById(@PathVariable("id") UUID id) {
+        this.bookServices.deleteBook(id);
     }
 
     @PutMapping("/updatebook/{id}")
-    public List<Book> updateBookById(@PathVariable("id") int id, @RequestBody Book book) {
-        return this.bookServices.updateBook(id, book);
+    public Book updateBookById(@PathVariable("id") UUID id, @RequestBody Book book) {
+        return this.bookServices.updateBook(book);
     }
 }
