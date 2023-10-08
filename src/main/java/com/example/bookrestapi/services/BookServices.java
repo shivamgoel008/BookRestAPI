@@ -1,52 +1,57 @@
 package com.example.bookrestapi.services;
 
+import com.example.bookrestapi.dao.BookRepository;
 import com.example.bookrestapi.entities.Book;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class BookServices {
-    private static List<Book> bookList = new ArrayList<>();
 
-    static {
-        bookList.add(new Book(12, "ABC", "DEF"));
-        bookList.add(new Book(13, "GHI", "JKL"));
-        bookList.add(new Book(14, "MNO", "PQR"));
-        bookList.add(new Book(15, "STU", "VXY"));
-    }
+    @Autowired
+    private BookRepository bookRepository;
+//    private static List<Book> bookList = new ArrayList<>();
+//
+//    static {
+//        bookList.add(new Book(12, "ABC", "DEF"));
+//        bookList.add(new Book(13, "GHI", "JKL"));
+//        bookList.add(new Book(14, "MNO", "PQR"));
+//        bookList.add(new Book(15, "STU", "VXY"));
+//    }
 
     public List<Book> getAllBooks() {
-        return bookList;
+        return (List<Book>) this.bookRepository.findAll();
     }
 
-    public Book getBookById(int id) {
-        Book book = new Book();
-        book = bookList.stream().filter(e -> e.getId() == id).findFirst().get();
-        return book;
+    public Book getBookById(UUID id) {
+        try {
+            return this.bookRepository.findBookById(id);
+        } catch (Exception e){
+            System.out.println("Exception: "+ e);
+        }
+        return null;
     }
 
-    public void addBook(Book book) {
-        bookList.add(book);
+    public Book addBook(Book book) {
+        book.setId(UUID.randomUUID());
+        try {
+            return this.bookRepository.save(book);
+        }  catch (Exception ex){
+            System.out.println(ex);
+        }
+        return null;
     }
 
-    public Book deleteBook(int bookId) {
-        Book book = new Book();
-        book = bookList.stream().filter(e -> e.getId() == bookId).findFirst().get();
-        bookList.remove(book);
-        return book;
+    public void deleteBook(UUID bookId) {
+        this.bookRepository.deleteById(bookId);
     }
 
-    public List<Book> updateBook(int id, Book book) {
-        bookList = bookList.stream().map(e -> {
-            if (e.getId() == id) {
-                e.setTitle(book.getTitle());
-                e.setAuthor(book.getAuthor());
-            }
-            return e;
-        }).collect(Collectors.toList());
-        return bookList;
+    public Book updateBook(Book book) {
+        return this.bookRepository.save(book);
     }
 }
