@@ -1,6 +1,7 @@
 package com.example.bookrestapi.services;
 
 import com.example.bookrestapi.dao.BookRepository;
+import com.example.bookrestapi.entities.Author;
 import com.example.bookrestapi.entities.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,7 @@ public class BookServices {
 
     public Book addBook(Book book) {
         book.setId(UUID.randomUUID());
+        book.getAuthor().setAuthorId(UUID.randomUUID());
         try {
             return this.bookRepository.save(book);
         }  catch (Exception ex){
