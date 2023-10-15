@@ -1,17 +1,17 @@
 package com.example.bookrestapi.entities;
 
 import jakarta.persistence.*;
-
 import java.util.UUID;
 
 @Entity
-@Table(name ="Books")
+@Table(name ="books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String title;
-    private String author;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Author author;
     public UUID getId() {
         return id;
     }
@@ -24,13 +24,13 @@ public class Book {
     public void setTitle(String title) {
         this.title = title;
     }
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
-    public  Book (UUID id, String title, String author){
+    public  Book (UUID id, String title, Author author){
         this.id=id;
         this.title = title;
         this.author = author;
@@ -38,6 +38,6 @@ public class Book {
     public  Book (){
         this.id=new UUID(0L,0L);
         this.title = "";
-        this.author = "";
+        this.author = new Author();
     }
 }
